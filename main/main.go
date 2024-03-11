@@ -1,8 +1,7 @@
 package main
 
-import "github.com/WilliamHan111/zoo/pkg/baidu/animal"
+import "fmt"
 
 func main() {
-	animal.CheckAnimal()
-	return
+	fmt.Println("Starting Server...")
 }
