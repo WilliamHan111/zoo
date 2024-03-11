@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BasicConfig>
+    <Web>
+        <host>localhost</host>
+        <http_port>1612</https_port>
+    </Web>
+    <Log>
+        <log_level>all</log_level>
+        <log_path>/usr/local/oushu/log/lava-server</log_path>
+        <log_file_size>100</log_file_size>
+        <log_file_number>60</log_file_number>
+    </Log>
+</BasicConfig>
