@@ -1,0 +1,14 @@
+mongo:
+  # 地址
+  uri: "mongodb://loaclhost:27017"
+  # 使用的数据库
+  db: "dbname"
+  # 用户名
+  user: "user"
+  # 密码
+  password: "pwd"
+  # collection
+  collection: "collection"
+web:
+    host: localhost
+    http_port: :8848
