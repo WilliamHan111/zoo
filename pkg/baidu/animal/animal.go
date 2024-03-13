@@ -9,7 +9,7 @@ import (
 	basic "github.com/WilliamHan111/zoo/pkg/baidu/basic"
 )
 
-func CheckAnimal() {
+func CheckAnimal() string {
 
 	url := "https://aip.baidubce.com/rest/2.0/image-classify/v1/animal?access_token=" + basic.GetAccessToken()
 
@@ -20,7 +20,7 @@ func CheckAnimal() {
 
 	if err != nil {
 		fmt.Println(err)
-		return
+		return ""
 	}
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	req.Header.Add("Accept", "application/json")
@@ -28,14 +28,15 @@ func CheckAnimal() {
 	res, err := client.Do(req)
 	if err != nil {
 		fmt.Println(err)
-		return
+		return ""
 	}
 	defer res.Body.Close()
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		fmt.Println(err)
-		return
+		return ""
 	}
 	fmt.Println(string(body))
+	return string(body)
 }
