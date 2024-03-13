@@ -1,3 +1,7 @@
 package consts
 
-//常量
+const (
+	DebugMode   string = "debug"
+	ReleaseMode string = "release"
+	TestMode    string = "test"
+)
