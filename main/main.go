@@ -1,9 +1,10 @@
 package main
 
 import (
-	"log"
 	"net/http"
 	"time"
+
+	"github.com/WilliamHan111/zoo/pkg/log"
 
 	"github.com/WilliamHan111/zoo/consts"
 	"github.com/WilliamHan111/zoo/pkg/conf"
@@ -19,11 +20,17 @@ var (
 )
 
 func main() {
+	//日志
+	err := log.InitLog("debug", "")
+	if err != nil {
+		panic(err)
+	}
+	defer log.Sync()
 	//配置文件
 	configPath = "../conf/basic.yaml"
 
 	//配置初始化
-	err := conf.InitConfigs(configPath)
+	err = conf.InitConfigs(configPath)
 	if err != nil {
 		panic(err)
 	}
