@@ -6,16 +6,28 @@ import (
 	"time"
 
 	"github.com/WilliamHan111/zoo/consts"
+	"github.com/WilliamHan111/zoo/pkg/conf"
 	"github.com/WilliamHan111/zoo/route"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 )
 
-// 运行模式
-var runMode string
+var (
+	runMode    string
+	configPath string
+)
 
 func main() {
+	//配置文件
+	configPath = "../conf/basic.yaml"
+
+	//配置初始化
+	err := conf.InitConfigs(configPath)
+	if err != nil {
+		panic(err)
+	}
+
 	//创建gin
 	g := gin.Default()
 	pprof.Register(g)
@@ -39,10 +51,12 @@ func main() {
 	g.Any("/ping", func(c *gin.Context) {
 		c.String(http.StatusOK, "pong")
 	})
+
 	//加载路由
 	route.LoadRoute(g)
+
 	//启动http服务
-	err := g.Run(":8848")
+	err = g.Run(conf.AllConfig.Web.HttpPort)
 	if err != nil {
 		log.Panicf("gin engine run error: %s", err)
 	}
