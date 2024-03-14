@@ -13,19 +13,26 @@ import (
 func Run() {
 	rand.Seed(time.Now().UnixNano())
 	// 注册自定义指标并赋初值
-	registerMetric("example_custom_metric", "This is an example custom metric.")
+	registerMetric("example_metric", "This is an example custom metric.", []string{"lable1", "lable2"})
 	go func() {
 		for {
 			for name := range allMetrics {
-				updateMetric(name, "lable", rand.Float64()*100)
+				if name == "example_metric" {
+					updateMetric(name, []string{"1", "2"}, rand.Float64()*100)
+				}
 			}
-			time.Sleep(1 * time.Second)
+			time.Sleep(10 * time.Second)
 		}
 	}()
 	http.HandleFunc("/config", handleConfig)
 	http.Handle("/metrics", promhttp.Handler())
-	http.ListenAndServe(":18080", nil)
+	go func() {
+		http.ListenAndServe(":18080", nil)
+	}()
+	LoadAnimalMetrics()
 }
+
+// 通过接口管理指标
 func handleConfig(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	name := r.Form.Get("name")
@@ -45,7 +52,7 @@ func handleConfig(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Missing 'help' parameter", http.StatusBadRequest)
 			return
 		}
-		registerMetric(name, help)
+		registerMetric(name, help, []string{label})
 		fmt.Fprintf(w, "Metric '%s' registered.\n", name)
 	case "unregister":
 		unregisterMetric(name)
@@ -55,7 +62,7 @@ func handleConfig(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Missing 'label' parameter", http.StatusBadRequest)
 			return
 		}
-		updateMetric(name, label, value)
+		updateMetric(name, []string{label}, value)
 		fmt.Fprintf(w, "Metric '%s' updated with label '%s' and value %f.\n", name, label, value)
 	default:
 		http.Error(w, "Invalid 'action' parameter", http.StatusBadRequest)

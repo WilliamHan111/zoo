@@ -5,21 +5,54 @@ import (
 	"time"
 )
 
-const (
-	animalMetric         = "animal"
-	animalMetricHelp     = "This is an animal metric."
-	animalMetricDuration = 1
-)
+var animalType = []string{
+	"猴子",
+	"大象",
+	"长颈鹿",
+	"狮子",
+	"老虎",
+	"野狼",
+}
+
+type AnimalMetric struct {
+	Name     string
+	Help     string
+	Duration int
+	Lables   AnimalMetricLables
+	Value    float64
+}
+
+type AnimalMetricLables struct {
+	Names  []string
+	Values []string
+}
+
+var animalMetric = &AnimalMetric{
+	Name:     "animal",
+	Help:     "This is an animal metric.",
+	Duration: 10,
+	Lables: AnimalMetricLables{
+		Names:  []string{"type"},
+		Values: []string{},
+	},
+	Value: 0,
+}
 
 func LoadAnimalMetrics() {
 	// 注册自定义指标并赋初值
-	registerMetric(animalMetric, animalMetricHelp)
+	registerMetric(animalMetric.Name, animalMetric.Help, animalMetric.Lables.Names)
 	for {
+		//获取值
+		rand.Seed(time.Now().UnixNano())
+		randomType := rand.Intn(5)
+		animalMetric.Lables.Values = []string{animalType[randomType]}
+		animalMetric.Value = float64(rand.Intn(100))
+		//赋值
 		for name := range allMetrics {
-			if name == animalMetric {
-				updateMetric(name, "lable", rand.Float64()*100)
+			if name == animalMetric.Name {
+				updateMetric(name, animalMetric.Lables.Values, animalMetric.Value)
 			}
 		}
-		time.Sleep(animalMetricDuration * time.Second)
+		time.Sleep(time.Duration(animalMetric.Duration) * time.Second)
 	}
 }
