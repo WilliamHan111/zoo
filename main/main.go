@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/WilliamHan111/zoo/pkg/log"
+	"github.com/WilliamHan111/zoo/pkg/prometheus"
 
 	"github.com/WilliamHan111/zoo/consts"
 	"github.com/WilliamHan111/zoo/pkg/conf"
@@ -63,8 +64,13 @@ func main() {
 	route.LoadRoute(g)
 
 	//启动http服务
-	err = g.Run(conf.AllConfig.Web.HttpPort)
-	if err != nil {
-		log.Panicf("gin engine run error: %s", err)
-	}
+	go func() {
+		err = g.Run(conf.AllConfig.Web.HttpPort)
+		if err != nil {
+			log.Panicf("gin engine run error: %s", err)
+		}
+	}()
+
+	//启动exporter提供接口，供prometheus拉取
+	prometheus.Run()
 }
