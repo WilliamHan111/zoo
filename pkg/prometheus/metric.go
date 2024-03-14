@@ -11,7 +11,8 @@ var (
 	mutex      sync.Mutex
 )
 
-func registerMetric(name, help string) {
+// 注册指标
+func registerMetric(name, help string, lables []string) {
 	mutex.Lock()
 	defer mutex.Unlock()
 
@@ -19,12 +20,13 @@ func registerMetric(name, help string) {
 		gaugeVec := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 			Name: name,
 			Help: help,
-		}, []string{"label"})
+		}, lables)
 		allMetrics[name] = gaugeVec
 		prometheus.MustRegister(gaugeVec)
 	}
 }
 
+// 取消注册指标
 func unregisterMetric(name string) {
 	mutex.Lock()
 	defer mutex.Unlock()
@@ -35,11 +37,12 @@ func unregisterMetric(name string) {
 	}
 }
 
-func updateMetric(name, label string, value float64) {
+// 指标更新
+func updateMetric(name string, labels []string, value float64) {
 	mutex.Lock()
 	defer mutex.Unlock()
 
 	if gaugeVec, ok := allMetrics[name]; ok {
-		gaugeVec.WithLabelValues(label).Set(value)
+		gaugeVec.WithLabelValues(labels...).Set(value)
 	}
 }
