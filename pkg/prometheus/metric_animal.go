@@ -14,24 +14,11 @@ var animalType = []string{
 	"野狼",
 }
 
-type AnimalMetric struct {
-	Name     string
-	Help     string
-	Duration int
-	Lables   AnimalMetricLables
-	Value    float64
-}
-
-type AnimalMetricLables struct {
-	Names  []string
-	Values []string
-}
-
-var animalMetric = &AnimalMetric{
+var animalMetric = &Metric{
 	Name:     "animal",
 	Help:     "This is an animal metric.",
 	Duration: 10,
-	Lables: AnimalMetricLables{
+	Lables: MetricLables{
 		Names:  []string{"type"},
 		Values: []string{},
 	},

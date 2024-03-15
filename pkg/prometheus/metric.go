@@ -11,6 +11,19 @@ var (
 	mutex      sync.Mutex
 )
 
+type Metric struct {
+	Name     string
+	Help     string
+	Duration int
+	Lables   MetricLables
+	Value    float64
+}
+
+type MetricLables struct {
+	Names  []string
+	Values []string
+}
+
 // 注册指标
 func registerMetric(name, help string, lables []string) {
 	mutex.Lock()
