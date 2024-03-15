@@ -29,7 +29,13 @@ func Run() {
 	go func() {
 		http.ListenAndServe(":18080", nil)
 	}()
-	LoadAnimalMetrics()
+	go func() {
+		LoadAnimalMetrics()
+	}()
+	go func() {
+		LoadCarMetrics()
+	}()
+	LoadUserMetrics()
 }
 
 // 通过接口管理指标
